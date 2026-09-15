@@ -1,35 +1,32 @@
 #!/bin/bash
 set -euo pipefail
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-NC='\033[0m'
+source ./env.sh
 
-SOURCE_PATH="/mnt/big-disk/local-media-streaming-master"
-
-TMP_DIR=$(mktemp -d)
-BACKUP_DIR_NAME="$(date +"%Y-%m-%d--%H:%M:%S")_arr-backup"
-BACKUP_DIR="$TMP_DIR/$BACKUP_DIR_NAME"
-FINAL_DESTINATION="/srv/arr-suite/backups"
-
+# Validating rsync exists in system.
 if ! command -v rsync  >/dev/null 2>&1
 then
     echo "Rsync not found in this device"
     exit 1
 fi
 
-mkdir -p $FINAL_DESTINATION
-mkdir -p $BACKUP_DIR/config
+# Validating sudo permissions.
+sudo -k # Revokes current cached sudo credentials to make sure the user understands it needs sudo.
+if [ "$EUID" = 0 ]; then
+    echo "Already sudo, proceeding as expected"
+else
+    if sudo true; then
+        echo "Correct password, proceeding as expected" 
+    else
+        echo "Wrong password, exiting program"
+    fi
+fi
 
-echo $TMP_DIR
-tree $TMP_DIR
+sudo mkdir -p $FINAL_DESTINATION
+CURRENT_USER=$(whoami)
+sudo chown $CURRENT_USER:$CURRENT_USER $FINAL_DESTINATION
 
-cleanup() {
-    rm -rf "$TMP_DIR"
-}
-trap cleanup EXIT
+mkdir -p $TMP_DIR/backup/config
 
 #TODO Stop all containers
 (cd $SOURCE_PATH && docker compose stop)
@@ -63,13 +60,7 @@ rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/. $TMP_DIR/backup/config
 # cp -a $SOURCE_PATH/config/bazarr/. $BACKUP_DIR/config/bazarr
 
 
-
-
 #TODO Restart all containers
 # (cd $SOURCE_PATH && docker compose start)
 
-#TODO Compress the backup directory.
-tar -czf "$FINAL_DESTINATION/$BACKUP_DIR_NAME.tar.gz" -C "$TMP_DIR" "$BACKUP_DIR_NAME"
-BACKUP_SIZE=$(du -sh "$FINAL_DESTINATION/$BACKUP_DIR_NAME.tar.gz" | cut -f1)
-echo -e "${GREEN}OK${NC}   Created $BACKUP_DIR_NAME.tar.gz ($BACKUP_SIZE)"
-echo ""
+source ./dir_manager.sh
