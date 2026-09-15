@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -euo pipefail
 
 RED='\033[0;31m'
@@ -35,33 +34,34 @@ trap cleanup EXIT
 #TODO Stop all containers
 (cd $SOURCE_PATH && docker compose stop)
 
+# Sync everything in one go.
+rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/. $TMP_DIR/backup/config
 
 
-#JELLYFIN
-cp -a $SOURCE_PATH/config/jellyfin/. $BACKUP_DIR/config/jellyfin
+# #JELLYFIN
+# cp -a $SOURCE_PATH/config/jellyfin/. $BACKUP_DIR/config/jellyfin
 
-#QBITTORRENT
-cp -a $SOURCE_PATH/config/qbittorrent/. $BACKUP_DIR/config/qbittorrent
+# #QBITTORRENT
+# cp -a $SOURCE_PATH/config/qbittorrent/. $BACKUP_DIR/config/qbittorrent
 
-#RADARR
-# sudo cp -a $SOURCE_PATH/config/radarr/. $BACKUP_DIR/config/radarr
-rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/radarr/. $BACKUP_DIR/config/radarr
+# #RADARR
+# # sudo cp -a $SOURCE_PATH/config/radarr/. $BACKUP_DIR/config/radarr
+# rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/radarr/. $BACKUP_DIR/config/radarr
 
-#SEERR
-cp -a $SOURCE_PATH/config/jellyseerr/. $BACKUP_DIR/config/seerr
+# #SEERR
+# cp -a $SOURCE_PATH/config/jellyseerr/. $BACKUP_DIR/config/seerr
 
-#PROWLARR
-# sudo cp -a $SOURCE_PATH/config/prowlarr/. $BACKUP_DIR/config/prowlarr
-rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/prowlarr/. $BACKUP_DIR/config/prowlarr
+# #PROWLARR
+# # sudo cp -a $SOURCE_PATH/config/prowlarr/. $BACKUP_DIR/config/prowlarr
+# rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/prowlarr/. $BACKUP_DIR/config/prowlarr
 
-#SONARR
-# cp -a $SOURCE_PATH/config/sonarr/. $BACKUP_DIR/config/sonarr
-rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/sonarr/. $BACKUP_DIR/config/sonarr
+# #SONARR
+# # cp -a $SOURCE_PATH/config/sonarr/. $BACKUP_DIR/config/sonarr
+# rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/sonarr/. $BACKUP_DIR/config/sonarr
 
-#BAZARR
-cp -a $SOURCE_PATH/config/bazarr/. $BACKUP_DIR/config/bazarr
+# #BAZARR
+# cp -a $SOURCE_PATH/config/bazarr/. $BACKUP_DIR/config/bazarr
 
-tree $BACKUP_DIR/config
 
 
 
