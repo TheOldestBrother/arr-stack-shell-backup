@@ -32,5 +32,5 @@ fi
 
 echo "${GREEN}OK${NC} - Crontab extracted"
 echo "# Backup script for the Arr suite." >> $TMP_DIR/tmp_cron
-echo "53 15 * * 3 (cd $(pwd); ./backup.sh) >> $(pwd)/script.log 2>&1 " >> $TMP_DIR/tmp_cron
+echo "@daily (cd $(pwd); ./backup.sh) >> $(pwd)/script.log 2>&1 " >> $TMP_DIR/tmp_cron
 crontab $TMP_DIR/tmp_cron
