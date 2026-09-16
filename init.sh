@@ -21,7 +21,9 @@ fi
 sudo mkdir -p $FINAL_DESTINATION
 CURRENT_USER=$(whoami)
 sudo chown $CURRENT_USER:$CURRENT_USER $FINAL_DESTINATION
-echo "${GREEN}OK${NC} - Destination files created"
+echo -e "${GREEN}OK${NC} -- Destination files created at :"
+echo "           ${FINAL_DESTINATION}"
+echo ""
 
 # Creating cron job for the backup.
 
@@ -30,7 +32,8 @@ if [[ "$(crontab -l > $TMP_DIR/tmp_cron)" != "0" ]]; then
     touch $TMP_DIR/tmp_cron
 fi
 
-echo "${GREEN}OK${NC} - Crontab extracted"
 echo "# Backup script for the Arr suite." >> $TMP_DIR/tmp_cron
 echo "@daily (cd $(pwd); ./backup.sh) >> $(pwd)/script.log 2>&1 " >> $TMP_DIR/tmp_cron
 crontab $TMP_DIR/tmp_cron
+
+echo -e "${GREEN}OK${NC} -- Cron job successfully setup"
