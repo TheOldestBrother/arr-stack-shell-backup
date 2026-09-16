@@ -16,11 +16,13 @@ MFILE="${FINAL_DESTINATION}/monthly/${MONTHY_FILENAME}"
 # Initialize backup dirs.
 mkdir -p "$FINAL_DESTINATION/last/" "$FINAL_DESTINATION/daily/" "$FINAL_DESTINATION/weekly/" "$FINAL_DESTINATION/monthly/"
 
+# Compressing the backup and storing it in directly to the final destination.
 tar -czf "$FILE" -C "$TMP_DIR" "backup"
 BACKUP_SIZE=$(du -sh "$FILE" | cut -f1)
 echo -e "${GREEN}OK${NC}   Created ${CYAN}'$FILE'${NC} ($BACKUP_SIZE)"
 echo ""
 
+# Creating a hardlink of the file to each directory.
 echo "Replacing daily backup ${DFILE} file this last backup..."
 ln -vf "${FILE}" "${DFILE}"
 echo "Replacing weekly backup ${WFILE} file this last backup..."

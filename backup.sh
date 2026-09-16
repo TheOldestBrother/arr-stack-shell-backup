@@ -22,45 +22,21 @@ else
     fi
 fi
 
+# Create final destination with correct permission so the programe can write to it.
 sudo mkdir -p $FINAL_DESTINATION
 CURRENT_USER=$(whoami)
 sudo chown $CURRENT_USER:$CURRENT_USER $FINAL_DESTINATION
 
 mkdir -p $TMP_DIR/backup/config
 
-#TODO Stop all containers
+# Stopping all containers before backing up.
 (cd $SOURCE_PATH && docker compose stop)
 
 # Sync everything in one go.
 rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/. $TMP_DIR/backup/config
 
-
-# #JELLYFIN
-# cp -a $SOURCE_PATH/config/jellyfin/. $BACKUP_DIR/config/jellyfin
-
-# #QBITTORRENT
-# cp -a $SOURCE_PATH/config/qbittorrent/. $BACKUP_DIR/config/qbittorrent
-
-# #RADARR
-# # sudo cp -a $SOURCE_PATH/config/radarr/. $BACKUP_DIR/config/radarr
-# rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/radarr/. $BACKUP_DIR/config/radarr
-
-# #SEERR
-# cp -a $SOURCE_PATH/config/jellyseerr/. $BACKUP_DIR/config/seerr
-
-# #PROWLARR
-# # sudo cp -a $SOURCE_PATH/config/prowlarr/. $BACKUP_DIR/config/prowlarr
-# rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/prowlarr/. $BACKUP_DIR/config/prowlarr
-
-# #SONARR
-# # cp -a $SOURCE_PATH/config/sonarr/. $BACKUP_DIR/config/sonarr
-# rsync -ax --exclude "**/asp/*" $SOURCE_PATH/config/sonarr/. $BACKUP_DIR/config/sonarr
-
-# #BAZARR
-# cp -a $SOURCE_PATH/config/bazarr/. $BACKUP_DIR/config/bazarr
-
-
 #TODO Restart all containers
+#FIXME Error while trying to start containers that are exited.
 # (cd $SOURCE_PATH && docker compose start)
 
 source ./dir_manager.sh
