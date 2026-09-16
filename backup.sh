@@ -1,7 +1,10 @@
 #!/bin/bash
-set -euo pipefail
+set -Eeo pipefail
 
 source ./env.sh
+
+#IMPROVEMENT Implement validation to check for errors before beginning the program.
+#IMPROVEMENT Add console prints to show user what's happening.
 
 # Validating rsync exists in system.
 if ! command -v rsync  >/dev/null 2>&1
@@ -9,23 +12,6 @@ then
     echo "Rsync not found in this device"
     exit 1
 fi
-
-# Validating sudo permissions.
-sudo -k # Revokes current cached sudo credentials to make sure the user understands it needs sudo.
-if [ "$EUID" = 0 ]; then
-    echo "Already sudo, proceeding as expected"
-else
-    if sudo true; then
-        echo "Correct password, proceeding as expected" 
-    else
-        echo "Wrong password, exiting program"
-    fi
-fi
-
-# Create final destination with correct permission so the programe can write to it.
-sudo mkdir -p $FINAL_DESTINATION
-CURRENT_USER=$(whoami)
-sudo chown $CURRENT_USER:$CURRENT_USER $FINAL_DESTINATION
 
 mkdir -p $TMP_DIR/backup/config
 
