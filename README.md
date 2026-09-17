@@ -24,6 +24,11 @@ Finally you just need to execute the program like so :
 
 You'll be prompted for your sudo password as it is needed to ensure the read and write permissions for the destination of the backups.
 
+### Future implementations
+
+* Parsing of the docker-compose file to find all the paths to backup
+* A script for automated restoring
+
 ### How the backups folder works ?
 
 You can read more about it in [Pau RE/prodrigestivill](https://github.com/prodrigestivill)'s repo : [docker-postgres-backup-local](https://github.com/prodrigestivill/docker-postgres-backup-locals#how-the-backups-folder-work)

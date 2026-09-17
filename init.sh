@@ -33,7 +33,7 @@ if [[ "$(crontab -l > $TMP_DIR/tmp_cron)" != "0" ]]; then
 fi
 
 echo "# Backup script for the Arr suite." >> $TMP_DIR/tmp_cron
-echo "@daily (cd $(pwd); ./backup.sh) >> $(pwd)/script.log 2>&1 " >> $TMP_DIR/tmp_cron
+echo "0 0 * * * (cd $(pwd); ./backup.sh) >> $(pwd)/script.log 2>&1 " >> $TMP_DIR/tmp_cron
 crontab $TMP_DIR/tmp_cron
 
 echo -e "${GREEN}OK${NC} -- Cron job successfully setup"
